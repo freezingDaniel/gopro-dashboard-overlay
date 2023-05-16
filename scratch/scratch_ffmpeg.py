@@ -3,15 +3,26 @@ import datetime
 from PIL import Image, ImageDraw, ImageFont
 
 from gopro_overlay.dimensions import Dimension
-from gopro_overlay.ffmpeg import FFMPEGOverlayVideo, FFMPEGOverlay
+from gopro_overlay.ffmpeg import FFMPEGOverlayVideo, FFMPEGOverlay, FFMPEGOptions
 
 if __name__ == "__main__":
 
     overlay = True
 
-    dimension = Dimension(1920, 1080)
+    dimension = Dimension(1024, 576)
+
+    options = FFMPEGOptions(
+        input=["-hwaccel", "cuda", "-hwaccel_output_format", "cuda" ],
+        output=["-vcodec", "h264_nvenc", "-rc:v", "cbr", "-b:v", "20M", "-bf:v", "3", "-profile:v", "high", "-spatial-aq", "true", "-movflags", "faststart"]
+    )
+
     if overlay:
-        generator = FFMPEGOverlayVideo(input="/data/richja/gopro/GH010064.MP4", output="output.mp4", overlay_size=dimension)
+        generator = FFMPEGOverlayVideo(
+            input="/data/richja/gopro/2021-10-02-richmond-park.mp4",
+            output="output.mp4",
+            overlay_size=dimension,
+            options=options
+        )
     else:
         generator = FFMPEGOverlay(output="output.mp4", overlay_size=dimension)
 

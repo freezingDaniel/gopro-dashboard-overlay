@@ -313,6 +313,7 @@ class FFMPEGOverlayVideo:
         cmd = flatten([
             "ffmpeg",
             "-y",
+            "-report",
             self.options.general,
             self.options.input,
             "-i", str(self.input),
@@ -321,7 +322,7 @@ class FFMPEGOverlayVideo:
             "-s", f"{self.overlay_size.x}x{self.overlay_size.y}",
             "-pix_fmt", "rgba",
             "-i", "-",
-            "-filter_complex", f"[0:v][1:v]overlay{filter_extra}",
+            "-filter_complex", f"[0:v]null[mp4_stream];[1:v]format=nv12,hwupload_cuda[overlay_stream];[mp4_stream][overlay_stream]overlay_cuda,hwdownload,format=nv12{filter_extra}",
             self.options.output,
             str(self.output)
         ])
