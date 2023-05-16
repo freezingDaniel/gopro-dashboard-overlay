@@ -285,7 +285,7 @@ class FFMPEGOptions:
     def __init__(self, input=None, output=None):
         self.input = input if input is not None else []
         self.output = output if output is not None else ["-vcodec", "libx264", "-preset", "veryfast"]
-        self.general = ["-hide_banner", "-loglevel", "info"]
+        self.general = ["-hide_banner", "-loglevel", "verbose"]
 
     def set_input_options(self, options):
         self.input = options
@@ -322,7 +322,7 @@ class FFMPEGOverlayVideo:
             "-s", f"{self.overlay_size.x}x{self.overlay_size.y}",
             "-pix_fmt", "rgba",
             "-i", "-",
-            "-filter_complex", f"[0:v]null[mp4_stream];[1:v]format=nv12,hwupload_cuda[overlay_stream];[mp4_stream][overlay_stream]overlay_cuda,hwdownload,format=nv12{filter_extra}",
+            "-filter_complex", f"[0:v]hwupload[mp4_stream];[1:v]format=yuva420p,hwupload[overlay_stream];[mp4_stream][overlay_stream]overlay_cuda[out]{filter_extra}",
             self.options.output,
             str(self.output)
         ])
