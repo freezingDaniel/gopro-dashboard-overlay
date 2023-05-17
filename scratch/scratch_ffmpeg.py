@@ -12,7 +12,7 @@ if __name__ == "__main__":
     dimension = Dimension(1024, 576)
 
     options = FFMPEGOptions(
-        input=["-hwaccel", "cuda", "-hwaccel_output_format", "yuv420p" ],
+        input=["-hwaccel", "cuda", "-hwaccel_output_format", "cuda" ],
         output=["-map","[out]", "-vcodec", "h264_nvenc", "-rc:v", "cbr", "-b:v", "20M", "-bf:v", "3", "-profile:v", "main", "-spatial-aq", "true", "-movflags", "faststart"]
     )
 

@@ -311,7 +311,7 @@ class FFMPEGOverlayVideo:
         else:
             filter_extra = f",scale=-1:{self.vsize}"
         cmd = flatten([
-            "ffmpeg",
+            "/home/richja/bin/ffmpeg",
             "-y",
             "-report",
             self.options.general,
@@ -322,7 +322,7 @@ class FFMPEGOverlayVideo:
             "-s", f"{self.overlay_size.x}x{self.overlay_size.y}",
             "-pix_fmt", "rgba",
             "-i", "-",
-            "-filter_complex", f"[0:v]hwupload[mp4_stream];[1:v]format=yuva420p,hwupload[overlay_stream];[mp4_stream][overlay_stream]overlay_cuda[out]{filter_extra}",
+            "-filter_complex", f"[0:v]scale_cuda=format=yuv420p[mp4_stream];[1:v]format=yuva420p,hwupload[overlay_stream];[mp4_stream][overlay_stream]overlay_cuda{filter_extra}",
             self.options.output,
             str(self.output)
         ])
